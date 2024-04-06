@@ -10,5 +10,9 @@ const MovieCast = () => {
     </div>
   )
 }
+const { movieId } = useParams();
+useEffect(() => {
+if (!movieId) return;
+}, [movieId]);
 
 export default MovieCast

@@ -1,7 +1,23 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+} */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
+.navLink {
+  text-decoration: none;
+  background-color: transparent;
+  transition: all 0.3s;
+}
+
+.active {
+  background-color: red;
+  color: white;
+}

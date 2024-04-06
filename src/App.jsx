@@ -9,26 +9,26 @@ const MovieDetailsPage = lazy(() => import("./pages/MovieDetailsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const MoviesPage = lazy(() => import("./pages/MoviesPage"));
 
-// const getNavLinkClassName = ({ isActive }) =>
-//   clsx(css.navLink, {
-//     [css.active]: isActive,
-//   });
+const getNavLinkClassName = ({ isActive }) =>
+  clsx(css.navLink, {
+    [css.active]: isActive,
+  });
 
 function App() {
   return (
     <div>
       <header>
         <nav className={css.nav}>
-          <NavLink  to="/">
+          <NavLink className={getNavLinkClassName} to="/">
             Home
           </NavLink>
-          <NavLink to="/MovieDetailsPage">
+          <NavLink className={getNavLinkClassName}  to="/MovieDetailsPage">
             MovieDetails
           </NavLink>
-          <NavLink to="/NotFoundPage">
+          <NavLink className={getNavLinkClassName} to="/NotFoundPage">
             NotFound
           </NavLink>
-          <NavLink to="/MoviesPage">
+          <NavLink className={getNavLinkClassName} to="/MoviesPage">
             Movies
           </NavLink>
         </nav>
