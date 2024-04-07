@@ -1,43 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { requestTrendingMovies } from '../services/api';
+import MovieList from '../components/MovieList/MovieList';
 
-function HomePage() {
-  const [trendingMovies, setTrendingMovies] = useState([]);
+ function HomePage() {
+  const [trendMovies, setTrendMovies] = useState([]);
 
   useEffect(() => {
-    const fetchTrendingMovies = async () => {
+    async function fetchTrendMovies() {
       try {
-        const response = await axios.get(
-          'https://api.themoviedb.org/3/trending/movie/day', 
-          {
-            headers: {
-              Authorization: 'Bearer api_read_access_token'
-            }
-          }
-        );
-        setTrendingMovies(response.data.results);
-      } catch (error) {
-        console.error('Error fetching trending movies:', error);
-      }
-    };
+        const data = await requestTrendingMovies();
 
-    fetchTrendingMovies();
+        if (data.results.length > 0) setTrendMovies(data.results);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchTrendMovies();
   }, []);
 
   return (
-    <div>
-      <h1>Trending Movies</h1>
-      <ul>
-        {trendingMovies.map(movie => (
-          <li key={movie.id}>
-            <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <main>
+      <h1>Trending today</h1>
+      <MovieList movies={trendMovies} />
+    </main>
   );
 }
 
-export default HomePage;
-
+export default HomePage

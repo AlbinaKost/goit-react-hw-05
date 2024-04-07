@@ -1,50 +1,45 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { requestMovie } from '../services/api';
+import MovieList from '../components/MovieList/MovieList';
 
-function MoviesPage() {
-  const [query, setQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+export default function MoviesPage() {
+  const [value, setValue] = useState('');
 
-  const handleSearchChange = event => {
-    setQuery(event.target.value);
+  const handleSubmit = e => {
+    e.preventDefault();
+    const querySearch = e.target.elements.search.value.trim();
+    setValue(querySearch);
   };
 
-  const handleSearchSubmit = async event => {
-    event.preventDefault();
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=1`,
-        {
-          headers: {
-            Authorization: 'Bearer api_read_access_token'
-          }
-        }
-      );
-      setSearchResults(response.data.results);
-    } catch (error) {
-      console.error('Error searching movies:', error);
+  const [movies, setMovies] = useState([]);
+  useEffect(() => {
+    if (value === '') return;
+
+    async function fetchMovie() {
+      try {
+        const data = await requestMovie(value);
+        if (data.results.length > 0) setMovies(data.results);
+      } catch (error) {
+        console.log(error);
+      }
     }
-  };
+    fetchMovie();
+  }, [value]);
 
+  
   return (
     <div>
-      <h1>Search Movies</h1>
-      <form onSubmit={handleSearchSubmit}>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
-          value={query}
-          onChange={handleSearchChange}
-          placeholder="Search for a movie..."
+          autoComplete="off"
+          autoFocus
+          placeholder="Search movie"
+          name="search"
         />
         <button type="submit">Search</button>
       </form>
-      <ul>
-        {searchResults.map(movie => (
-          <li key={movie.id}>{movie.title}</li>
-        ))}
-      </ul>
+      <MovieList movies={movies} />
     </div>
   );
 }
-
-export default MoviesPage;
