@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { requestMovie } from '../services/api';
 import MovieList from '../components/MovieList/MovieList';
 
+
 export default function MoviesPage() {
-  const [value, setValue] = useState('');
+  const { searchQuery } = useSearchParams();
+  const [value, setValue] = useState(searchQuery || '');
 
   const handleSubmit = e => {
     e.preventDefault();
