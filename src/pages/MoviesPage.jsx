@@ -1,35 +1,33 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { requestMovie } from '../services/api';
 import MovieList from '../components/MovieList/MovieList';
-
-
+import { useLocation, useSearchParams } from 'react-router-dom';
 export default function MoviesPage() {
-  const { searchQuery } = useSearchParams();
-  const [value, setValue] = useState(searchQuery || '');
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const paramQuery = searchParams.get('value');
 
   const handleSubmit = e => {
     e.preventDefault();
     const querySearch = e.target.elements.search.value.trim();
-    setValue(querySearch);
+    setSearchParams({ value: querySearch });
   };
 
   const [movies, setMovies] = useState([]);
   useEffect(() => {
-    if (value === '') return;
+    if (!paramQuery) return;
 
     async function fetchMovie() {
       try {
-        const data = await requestMovie(value);
+        const data = await requestMovie(paramQuery);
         if (data.results.length > 0) setMovies(data.results);
       } catch (error) {
         console.log(error);
       }
     }
     fetchMovie();
-  }, [value]);
+  }, [paramQuery]);
 
-  
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -42,7 +40,7 @@ export default function MoviesPage() {
         />
         <button type="submit">Search</button>
       </form>
-      <MovieList movies={movies} />
+      <MovieList movies={movies} from={location} defLocation="/movies" />
     </div>
   );
 }

@@ -6,14 +6,14 @@ import css from './MovieReviews.module.css';
 function MovieReviews() {
   const { movieId } = useParams();
 
-  const [MovieReviewsData, setMovieReviewsData] = useState(null);
+  const [reviews, setReviews] = useState(null);
 
   useEffect(() => {
     async function fetchMovieReviews() {
       try {
         const data = await requestMovieReviews(movieId);
 
-        setMovieReviewsData(data);
+        setReviews(data.results);
       } catch (error) {
         console.log(error);
       }
@@ -23,9 +23,9 @@ function MovieReviews() {
 
   return (
     <>
-      {MovieReviewsData && (
+      {reviews && (
         <ul className={css.list}>
-          {MovieReviewsData.results.map(review => {
+          {reviews.map(review => {
             return (
               <li key={review.id}>
                 <h3>Author: {review.author}</h3>
